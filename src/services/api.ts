@@ -189,10 +189,16 @@ export const api = {
         .single();
       
       if (createError) throw createError;
-      return { storeName: newSettings.store_name };
+      return { 
+        storeName: newSettings.store_name,
+        whatsappNumber: newSettings.whatsapp_number || ''
+      };
     }
     
-    return { storeName: data.store_name };
+    return { 
+      storeName: data.store_name,
+      whatsappNumber: data.whatsapp_number || ''
+    };
   },
 
   async updateStoreSettings(settings: StoreSettings): Promise<StoreSettings> {
@@ -207,23 +213,35 @@ export const api = {
         // Se existe um registro, atualiza
         const { data, error } = await supabase
           .from('store_settings')
-          .update({ store_name: settings.storeName })
+          .update({ 
+            store_name: settings.storeName,
+            whatsapp_number: settings.whatsappNumber
+          })
           .eq('id', existingSettings.id)
           .select()
           .single();
         
         if (error) throw error;
-        return { storeName: data.store_name };
+        return { 
+          storeName: data.store_name,
+          whatsappNumber: data.whatsapp_number || ''
+        };
       } else {
         // Se não existe, cria um novo
         const { data, error } = await supabase
           .from('store_settings')
-          .insert([{ store_name: settings.storeName }])
+          .insert([{ 
+            store_name: settings.storeName,
+            whatsapp_number: settings.whatsappNumber
+          }])
           .select()
           .single();
         
         if (error) throw error;
-        return { storeName: data.store_name };
+        return { 
+          storeName: data.store_name,
+          whatsappNumber: data.whatsapp_number || ''
+        };
       }
     } catch (error) {
       console.error('Erro ao atualizar configurações:', error);

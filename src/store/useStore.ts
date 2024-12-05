@@ -41,6 +41,7 @@ export const useStore = create<Store>((set, get) => ({
   cart: [],
   settings: {
     storeName: 'Loja Virtual',
+    whatsappNumber: ''
   },
   isLoading: false,
   error: null,
@@ -57,7 +58,7 @@ export const useStore = create<Store>((set, get) => ({
       set({
         categories,
         products,
-        settings: settings || { storeName: 'Loja Virtual' },
+        settings: settings || { storeName: 'Loja Virtual', whatsappNumber: '' },
         isLoading: false,
       });
     } catch (error) {

@@ -12,7 +12,7 @@ interface ContactForm {
 }
 
 export function CartPage() {
-  const { cart, products, categories, removeFromCart } = useStore();
+  const { cart, products, categories, removeFromCart, settings } = useStore();
   const navigate = useNavigate();
   const [contactForm, setContactForm] = useState<ContactForm>({
     name: '',
@@ -38,6 +38,15 @@ export function CartPage() {
   const handleSendQuote = () => {
     const { name, email, phone } = contactForm;
     
+    // Verifica se há um número de WhatsApp configurado
+    if (!settings.whatsappNumber) {
+      alert('Erro: Número de WhatsApp não configurado na loja.');
+      return;
+    }
+
+    // Remove todos os caracteres não numéricos do número
+    const whatsappNumber = settings.whatsappNumber.replace(/\D/g, '');
+    
     // Formata a mensagem para o WhatsApp
     let message = `*Novo Pedido de Orçamento*\n\n`;
     message += `*Dados do Cliente*\n`;
@@ -53,7 +62,7 @@ export function CartPage() {
 
     // Codifica a mensagem para URL
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/5531989347941?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/55${whatsappNumber}?text=${encodedMessage}`;
     
     // Abre o WhatsApp em uma nova aba
     window.open(whatsappUrl, '_blank');
@@ -164,21 +173,13 @@ export function CartPage() {
               required
             />
           </div>
+          <div className="flex justify-end">
+            <Button onClick={handleSendQuote} className="flex items-center space-x-2">
+              <Send className="h-4 w-4" />
+              <span>Enviar Orçamento</span>
+            </Button>
+          </div>
         </div>
-      </div>
-
-      <div className="flex justify-between items-center">
-        <Link to="/">
-          <Button variant="secondary">Continuar Comprando</Button>
-        </Link>
-        <Button
-          onClick={handleSendQuote}
-          disabled={!contactForm.name || !contactForm.email || !contactForm.phone}
-          className="flex items-center space-x-2"
-        >
-          <Send className="h-4 w-4" />
-          <span>Solicitar Orçamento</span>
-        </Button>
       </div>
     </div>
   );

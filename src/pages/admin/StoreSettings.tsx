@@ -7,13 +7,15 @@ import { ErrorMessage } from '../../components/ErrorMessage';
 export function StoreSettings() {
   const { settings, updateSettings, isLoading, error } = useStore();
   const [storeName, setStoreName] = useState(settings.storeName);
+  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     setStoreName(settings.storeName);
-  }, [settings.storeName]);
+    setWhatsappNumber(settings.whatsappNumber || '');
+  }, [settings.storeName, settings.whatsappNumber]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +24,10 @@ export function StoreSettings() {
     setSuccessMessage(null);
 
     try {
-      await updateSettings({ storeName });
+      await updateSettings({ 
+        storeName,
+        whatsappNumber: whatsappNumber || null 
+      });
       setSaveError(null);
       setSuccessMessage('Configurações salvas com sucesso!');
       
@@ -45,6 +50,25 @@ export function StoreSettings() {
       </div>
     );
   }
+
+  const formatWhatsAppNumber = (value: string) => {
+    // Remove tudo que não for número
+    const numbers = value.replace(/\D/g, '');
+    
+    // Aplica a máscara (XX) XXXXX-XXXX
+    if (numbers.length <= 11) {
+      return numbers
+        .replace(/(\d{2})/, '($1) ')
+        .replace(/(\d{5})/, '$1-')
+        .replace(/(-\d{4})\d+?$/, '$1');
+    }
+    return numbers.slice(0, 11); // Limita a 11 dígitos
+  };
+
+  const handleWhatsAppChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatWhatsAppNumber(e.target.value);
+    setWhatsappNumber(formatted);
+  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -72,8 +96,29 @@ export function StoreSettings() {
             required
           />
         </div>
+
+        <div>
+          <label htmlFor="whatsappNumber" className="block text-sm font-medium text-gray-700">
+            Número do WhatsApp
+          </label>
+          <input
+            id="whatsappNumber"
+            type="text"
+            value={whatsappNumber}
+            onChange={handleWhatsAppChange}
+            placeholder="(XX) XXXXX-XXXX"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          />
+          <p className="mt-1 text-sm text-gray-500">
+            Digite apenas números. O formato será aplicado automaticamente.
+          </p>
+        </div>
+
         <div className="flex justify-end">
-          <Button type="submit" disabled={isSaving || storeName === settings.storeName}>
+          <Button 
+            type="submit" 
+            disabled={isSaving || (storeName === settings.storeName && whatsappNumber === settings.whatsappNumber)}
+          >
             {isSaving ? (
               <div className="flex items-center space-x-2">
                 <LoadingSpinner />

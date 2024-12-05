@@ -20,6 +20,7 @@ create table public.products (
 create table public.store_settings (
   id uuid default gen_random_uuid() primary key,
   store_name text not null default 'Loja Virtual',
+  whatsapp_number text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
