@@ -67,11 +67,13 @@ export function ProductList() {
                 key={product.id}
                 className="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col"
               >
-                <ProductImage
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-48 object-cover"
-                />
+                <div className="relative aspect-square">
+                  <ProductImage
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
                 <div className="p-4 space-y-2 flex-grow">
                   <div>
                     <h2 className="text-lg font-medium text-gray-900">

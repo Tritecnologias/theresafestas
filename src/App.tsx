@@ -10,6 +10,7 @@ import { CartPage } from './pages/CartPage';
 import { StoreSettings } from './pages/admin/StoreSettings';
 import { UserManagement } from './pages/admin/UserManagement';
 import { useStore } from './store/useStore';
+import { FloatingCart } from './components/FloatingCart';
 
 function App() {
   const initializeStore = useStore((state) => state.initializeStore);
@@ -21,7 +22,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route element={<Layout className="min-h-screen bg-background" />}>
           <Route index element={<ProductList />} />
           <Route path="cart" element={<CartPage />} />
           <Route
@@ -66,6 +67,7 @@ function App() {
           />
         </Route>
       </Routes>
+      <FloatingCart />
     </Router>
   );
 }

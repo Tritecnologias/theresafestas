@@ -98,13 +98,15 @@ export function CartPage() {
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="divide-y divide-gray-200">
           {cartItems.map(({ product, quantity, category }) => (
-            <div key={product.id} className="p-6 flex items-center space-x-6">
-              <ProductImage
-                src={product.imageUrl}
-                alt={product.name}
-                className="w-24 h-24 object-cover rounded-md"
-              />
-              <div className="flex-grow">
+            <div key={product.id} className="p-6 flex flex-col sm:flex-row items-center gap-6">
+              <div className="relative w-32 h-32">
+                <ProductImage
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="w-full h-full object-contain rounded-md"
+                />
+              </div>
+              <div className="flex-grow text-center sm:text-left">
                 <h3 className="text-lg font-medium text-gray-900">
                   {product.name}
                 </h3>
